@@ -12,6 +12,9 @@ function Class(options, parentClass){
   if(parentClass) {
     __TargetClass__.prototype = new parentClass(arguments);
     __TargetClass__.prototype.constructor = __TargetClass__;
+    __TargetClass__.__super__ = parentClass;
+  } else {
+    __TargetClass__.__super__ = Object;
   }
 
   return __TargetClass__;
