@@ -4,7 +4,7 @@ function Class(prop, parentClass){
   var klass = prop.initialize ? prop.initialize : function(){};
 
   if(parentClass) {
-    klass.prototype = new parentClass(arguments);
+    klass.prototype = new parentClass();
     klass.prototype.constructor = klass;
     klass.__super__ = parentClass;
 
@@ -20,7 +20,7 @@ function Class(prop, parentClass){
   }
 
   if(parentClass) {
-    var _super = klass.prototype;
+    var _super = klass.__super__.prototype;
   }
   for(method in prop) {
     if(method != 'initialize') {
