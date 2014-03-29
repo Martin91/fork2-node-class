@@ -8,7 +8,11 @@ function Class(options, parentClass){
     __TargetClass__.prototype.constructor = __TargetClass__;
     __TargetClass__.__super__ = parentClass;
 
-    __TargetClass__.prototype.super = function(){};
+    __TargetClass__.prototype.super = function(_method){
+      var parentClass = __TargetClass__.__super__;
+      var res = parentClass.prototype[_method].apply(this, [].slice.call(arguments, 1));
+      return res;
+    };
   } else {
     __TargetClass__.__super__ = Object;
   }
