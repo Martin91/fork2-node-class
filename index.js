@@ -1,7 +1,7 @@
 module.exports = Class;
 
-function Class(options, parentClass){
-  var klass = options.initialize ? options.initialize : function(){};
+function Class(prop, parentClass){
+  var klass = prop.initialize ? prop.initialize : function(){};
 
   if(parentClass) {
     klass.prototype = new parentClass(arguments);
@@ -19,9 +19,24 @@ function Class(options, parentClass){
     klass.__super__ = Object;
   }
 
-  for(key in options) {
-    if(key != 'initialize') {
-      klass.prototype[key] = options[key];
+  if(parentClass) {
+    var _super = klass.prototype;
+  }
+  for(method in prop) {
+    if(method != 'initialize') {
+      // Determine if the current method is existed in the super class
+      klass.prototype[method] =
+        (parentClass && (typeof prop[method]) == 'function' && _super.hasOwnProperty(method) && (typeof _super[method]) == 'function') ?
+          (function(method, func) {
+            return function(){
+              var tmp = this._super;
+              this._super = _super[method];
+              var res = func.apply(this, arguments);
+
+              this._super = tmp;
+              return res;
+            };
+          })(method, prop[method]) : prop[method];
     }
   }
 
